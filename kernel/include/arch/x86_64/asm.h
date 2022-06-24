@@ -62,4 +62,9 @@ static inline void __hlt_for__()
         __hlt__();
 }
 
+static inline void __pause__()
+{
+    __asm__ volatile("pause");
+}
+
 #endif
