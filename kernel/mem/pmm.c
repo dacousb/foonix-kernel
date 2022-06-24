@@ -1,7 +1,10 @@
 #include <mem/mem.h>
 #include <mem/pmm.h>
+#include <mutex.h>
 #include <panic.h>
 #include <printf.h>
+
+mutex_t pmm_mutex = UNLOCKED;
 
 u64 highest_addr = 0; // aligned
 bitmap_t bitmap = {0};
@@ -34,6 +37,52 @@ static inline int is_used(u64 addr)
 {
     u64 page = addr / PAGE_SIZE;
     return bitmap.bitmap[page / 8] & (1 << (page % 8));
+}
+
+addr_range_t pmm_alloc(u64 size)
+{
+    lock(&pmm_mutex);
+
+    if (!IS_ALIGNED(size))
+        panic("size not aligned");
+
+    addr_range_t range = {0};
+    for (u64 page = 0; page < bitmap.size * 8; page++)
+    {
+        if (bitmap.bitmap[page / 8] & (1 << (page % 8)))
+        { // used region
+            range.base = 0;
+            range.size = 0;
+        }
+        else
+        { // free region
+            if (range.size == 0)
+                range.base = page * PAGE_SIZE;
+            range.size += PAGE_SIZE;
+        }
+
+        if (range.size == size)
+            break;
+    }
+
+    if (range.size < size)
+        panic("out of memory");
+
+    set_used_range(range.base, range.size / PAGE_SIZE);
+
+    unlock(&pmm_mutex);
+    return range;
+}
+
+void pmm_free(addr_range_t range)
+{
+    lock(&pmm_mutex);
+
+    if (!IS_ALIGNED(range.size))
+        panic("size not aligned");
+    set_unused_range(range.base, range.size / PAGE_SIZE);
+
+    unlock(&pmm_mutex);
 }
 
 void init_pmm(struct limine_memmap_response *memmap)
