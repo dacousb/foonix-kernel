@@ -7,6 +7,7 @@
 #include <arch/x86_64/idt.h>
 #include <fb.h>
 #include <mem/pmm.h>
+#include <mem/vmm.h>
 #include <panic.h>
 #include <printf.h>
 #include <types.h>
@@ -22,6 +23,8 @@ void _start(void)
     if (memmap_request.response == nil ||
         memmap_request.response->entry_count < 1)
         panic("memmap request failed");
+    if (kaddr_request.response == nil)
+        panic("kaddr request failed");
 
     init_fb(framebuffer_request.response->framebuffers[0]);
     printf("  __                   _      \n");
@@ -37,6 +40,7 @@ void _start(void)
     init_apic(acpi);
 
     init_pmm(memmap_request.response);
+    init_vmm(kaddr_request.response, memmap_request.response);
 
     __hlt_for__();
 }

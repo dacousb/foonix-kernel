@@ -5,7 +5,6 @@
 #include <types.h>
 
 #define MEM_IO_BASE (u64)0xffff800000000000
-#define MEM_KERNEL_BASE (u64)0xffffffff80000000
 
 #define PAGE_SIZE 4096
 

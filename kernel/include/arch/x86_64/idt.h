@@ -11,10 +11,10 @@ typedef struct
 
 enum isr_flag
 {
-    PRESENT = (1 << 7),
-    USER = (3 << 5),
-    INTERRUPT_GATE = 0xe,
-    TRAP_GATE = 0xf
+    ISR_PRESENT = (1 << 7),
+    ISR_USER = (3 << 5),
+    ISR_INTERRUPT_GATE = 0xe,
+    ISR_TRAP_GATE = 0xf
 };
 
 typedef struct

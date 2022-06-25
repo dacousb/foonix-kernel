@@ -17,4 +17,9 @@ static volatile struct limine_memmap_request memmap_request = {
     .revision = 0,
 };
 
+static volatile struct limine_kernel_address_request kaddr_request = {
+    .id = LIMINE_KERNEL_ADDRESS_REQUEST,
+    .revision = 0,
+};
+
 #endif

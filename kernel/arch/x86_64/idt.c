@@ -23,7 +23,7 @@ void init_idt()
     idtr.base = (u64)&idt;
 
     for (i32 i = 0; i < 256; i++)
-        set_isr(i, interrupts[i], PRESENT | INTERRUPT_GATE);
+        set_isr(i, interrupts[i], ISR_PRESENT | ISR_INTERRUPT_GATE);
 
     __asm__ volatile("lidt %0" ::"m"(idtr));
     __asm__ volatile("sti");

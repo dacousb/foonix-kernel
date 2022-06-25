@@ -67,4 +67,18 @@ static inline void __pause__()
     __asm__ volatile("pause");
 }
 
+static inline void __invlpg__(u64 virtual_addr)
+{
+    __asm__ volatile("invlpg (%0)"
+                     :
+                     : "r"(virtual_addr));
+}
+
+static inline void __cr3__(u64 value)
+{
+    __asm__ volatile("mov %0, %%cr3"
+                     :
+                     : "a"(value));
+}
+
 #endif
