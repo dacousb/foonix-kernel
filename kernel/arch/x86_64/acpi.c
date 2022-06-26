@@ -1,4 +1,5 @@
 #include <arch/x86_64/acpi.h>
+#include <mem/mem.h>
 #include <mem/mmap.h>
 #include <printf.h>
 
@@ -13,10 +14,7 @@ acpi_t init_acpi(u64 rsdp)
     {
         sdt_header_t *header = (sdt_header_t *)phys_to_io(rsdt->sdts[i]);
 
-        if (header->signature[0] == 'A' &&
-            header->signature[1] == 'P' &&
-            header->signature[2] == 'I' &&
-            header->signature[3] == 'C')
+        if (!memcmp(header->signature, "APIC", 4))
         {
             acpi.madt = (madt_h *)header;
             acpi.lapic = acpi.madt->lapic;

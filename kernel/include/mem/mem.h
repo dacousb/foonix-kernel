@@ -16,4 +16,15 @@ static inline void memcpy(void *dest, void *src, u64 n)
         *((u8 *)dest + i) = *((u8 *)src + i);
 }
 
+static inline int memcmp(void *s1, void *s2, u64 n)
+{
+    for (u64 i = 0; i < n; i++)
+    {
+        int diff = ((char *)s1)[i] - ((char *)s2)[i];
+        if (diff)
+            return diff;
+    }
+    return 0;
+}
+
 #endif
