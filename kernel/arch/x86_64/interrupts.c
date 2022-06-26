@@ -3,7 +3,7 @@
 #include <arch/x86_64/interrupts.h>
 #include <printf.h>
 
-const char *exception_messages[] = {
+static const char *exception_messages[] = {
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -40,7 +40,7 @@ const char *exception_messages[] = {
     "Reserved",
     "Reserved"};
 
-void exception_handler(regs_t *regs)
+static void exception_handler(regs_t *regs)
 {
     printf("------------------------------------------------\n");
     printf("EXCEPTION (%s) (err_code=0x%lx)\n",

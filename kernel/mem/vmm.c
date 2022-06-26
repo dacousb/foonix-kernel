@@ -5,9 +5,9 @@
 #include <mem/vmm.h>
 #include <printf.h>
 
-vmm_entry_t *kernel_pm = nil;
+static vmm_entry_t *kernel_pm = nil;
 
-vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
+static inline vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
 {
     if (!(table[index] & VMM_PRESENT))
     {
@@ -21,7 +21,7 @@ vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
     return (vmm_entry_t *)phys_to_io(table[index] & ~((u64)0xfff));
 }
 
-void vmm_map_page(vmm_entry_t *pm4, u64 virtual_addr, u64 physical_addr, u64 flags)
+static inline void vmm_map_page(vmm_entry_t *pm4, u64 virtual_addr, u64 physical_addr, u64 flags)
 {
     u64 pm4_index = (virtual_addr & ((u64)0x1ff << 39)) >> 39;
     u64 pm3_index = (virtual_addr & ((u64)0x1ff << 30)) >> 30;
