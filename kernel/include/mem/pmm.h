@@ -4,8 +4,6 @@
 #include <limine.h>
 #include <types.h>
 
-#define MEM_IO_BASE (u64)0xffff800000000000
-
 #define PAGE_SIZE 4096
 
 #define ALIGN_UP(addr) (((addr) + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1))

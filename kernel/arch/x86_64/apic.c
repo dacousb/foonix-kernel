@@ -1,7 +1,7 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/pic.h>
-#include <mem/pmm.h>
+#include <mem/mmap.h>
 #include <printf.h>
 
 static u64 lapic_base = 0;
@@ -40,7 +40,7 @@ static void init_lapic_timer()
 
 void init_apic(acpi_t acpi)
 {
-    lapic_base = MEM_IO_BASE + acpi.lapic;
+    lapic_base = phys_to_io(acpi.lapic);
 
     disable_pic();
     lapic_write(LAPIC_SPURIOUS, lapic_read(LAPIC_SPURIOUS) | (1 << 8));

@@ -1,6 +1,7 @@
 #include <arch/x86_64/asm.h>
 #include <mem/heap.h>
 #include <mem/mem.h>
+#include <mem/mmap.h>
 #include <mem/vmm.h>
 #include <printf.h>
 
@@ -11,13 +12,13 @@ vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
     if (!(table[index] & VMM_PRESENT))
     {
         addr_range_t range = pmm_alloc(PM_SIZE); // must be physical
-        memset((void *)(range.base + MEM_IO_BASE), 0, PM_SIZE);
+        memset((void *)phys_to_io(range.base), 0, PM_SIZE);
 
         table[index] = range.base;
         table[index] |= flags;
     }
 
-    return (vmm_entry_t *)((table[index] & ~((u64)0xfff)) + MEM_IO_BASE);
+    return (vmm_entry_t *)phys_to_io(table[index] & ~((u64)0xfff));
 }
 
 void vmm_map_page(vmm_entry_t *pm4, u64 virtual_addr, u64 physical_addr, u64 flags)
@@ -42,14 +43,14 @@ void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap
 
     memset(kernel_pm, 0, PM_SIZE);
 
-    for (u64 i = 0; i < 0x10000000; i += PM_SIZE)
+    for (u64 i = 0; i < 0x10000000; i += PAGE_SIZE)
         vmm_map_page(kernel_pm, kaddr->virtual_base + i, kaddr->physical_base + i, VMM_PRESENT | VMM_WRITABLE);
     printf("     .");
 
-    for (u64 i = 0x1000; i < 0x100000000; i += PM_SIZE)
+    for (u64 i = 0x1000; i < 0x100000000; i += PAGE_SIZE)
     {
         vmm_map_page(kernel_pm, i, i, VMM_PRESENT | VMM_WRITABLE);
-        vmm_map_page(kernel_pm, MEM_IO_BASE + i, i, VMM_PRESENT | VMM_WRITABLE);
+        vmm_map_page(kernel_pm, phys_to_io(i), i, VMM_PRESENT | VMM_WRITABLE);
     }
     printf(".");
 
@@ -68,12 +69,12 @@ void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap
             if (j < 0x100000000)
                 continue;
             vmm_map_page(kernel_pm, j, j, VMM_PRESENT | VMM_WRITABLE);
-            vmm_map_page(kernel_pm, MEM_IO_BASE + j, j, VMM_PRESENT | VMM_WRITABLE);
+            vmm_map_page(kernel_pm, phys_to_io(j), j, VMM_PRESENT | VMM_WRITABLE);
         }
     }
     printf(".\n");
 
-    __cr3__(((u64)kernel_pm - MEM_IO_BASE));
+    __cr3__(io_to_phys((u64)kernel_pm));
 
     printf("[OK] init VMM\n");
 }

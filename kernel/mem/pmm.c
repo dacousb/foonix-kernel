@@ -1,5 +1,6 @@
 #include <mem/mem.h>
 #include <mem/pmm.h>
+#include <mem/mmap.h>
 #include <mutex.h>
 #include <panic.h>
 #include <printf.h>
@@ -108,7 +109,7 @@ void init_pmm(struct limine_memmap_response *memmap)
 
         if (entry->length >= bitmap.size)
         {
-            bitmap.bitmap = (u8 *)entry->base + MEM_IO_BASE;
+            bitmap.bitmap = (u8 *)phys_to_io(entry->base);
             entry->length -= bitmap.size;
             entry->base += bitmap.size;
 
