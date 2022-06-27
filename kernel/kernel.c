@@ -4,6 +4,7 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/gdt.h>
+#include <arch/x86_64/hpet.h>
 #include <arch/x86_64/idt.h>
 #include <fb.h>
 #include <mem/pmm.h>
@@ -37,6 +38,7 @@ void _start(void)
     init_idt();
 
     acpi_t acpi = init_acpi((u64)rsdp_request.response->address);
+    init_hpet(acpi);
     init_apic(acpi);
 
     init_pmm(memmap_request.response);

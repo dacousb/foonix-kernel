@@ -49,8 +49,28 @@ typedef struct
 
 typedef struct
 {
+    sdt_header_t header;
+
+    u8 hardware_revision_id;
+    u8 bits;
+    u16 vendor_id;
+
+    u8 address_space_id;
+    u8 register_bit_width;
+    u8 register_bit_offset;
+
+    u8 reserved;
+    u64 address;
+
+    u8 hpet_number;
+    u16 minimum_tick;
+    u8 page_protection;
+} __attribute((packed)) hpet_t;
+
+typedef struct
+{
     madt_h *madt;
-    u64 lapic;
+    hpet_t *hpet;
 } acpi_t;
 
 acpi_t init_acpi(u64 rsdp);

@@ -40,7 +40,7 @@ static void init_lapic_timer()
 
 void init_apic(acpi_t acpi)
 {
-    lapic_base = phys_to_io(acpi.lapic);
+    lapic_base = phys_to_io(acpi.madt->lapic);
 
     disable_pic();
     lapic_write(LAPIC_SPURIOUS, lapic_read(LAPIC_SPURIOUS) | (1 << 8));

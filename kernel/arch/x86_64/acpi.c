@@ -17,8 +17,12 @@ acpi_t init_acpi(u64 rsdp)
         if (!memcmp(header->signature, "APIC", 4))
         {
             acpi.madt = (madt_h *)header;
-            acpi.lapic = acpi.madt->lapic;
             printf("     found APIC\n");
+        }
+        else if (!memcmp(header->signature, "HPET", 4))
+        {
+            acpi.hpet = (hpet_t*)header;
+            printf("     found HPET\n");
         }
     }
 
