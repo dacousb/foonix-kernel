@@ -1,6 +1,6 @@
-# foonix-kernel
-
-![foonix running on QEMU](assets/foonix.png)
+<p align="center"><img src="assets/foonix_logo.png"/></p>
+<p align="center"><i>a tiny kernel for the x86_64 architecture</i></p>
+<p align="center"><img src="assets/foonix.png"/></p>
 
 ## Build
 
