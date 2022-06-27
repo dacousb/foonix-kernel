@@ -1,5 +1,6 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/asm.h>
+#include <arch/x86_64/hpet.h>
 #include <arch/x86_64/pic.h>
 #include <mem/mmap.h>
 #include <printf.h>
@@ -23,19 +24,16 @@ void lapic_eoi()
 
 static void init_lapic_timer()
 {
-    lapic_write(LAPIC_TIMER_DIVIDE, 3);                 // divider 16
-    lapic_write(LAPIC_TIMER_INITIAL_COUNT, 0xffffffff); // -1 when signed
-
-    // TODO HPET
-    printf("     waiting...\n");
-
-    lapic_write(LAPIC_TIMER, LAPIC_INT_MASKED);
-
-    u32 tick_in_10ms = 0xffffffff - lapic_read(LAPIC_TIMER_CURRENT_COUNT);
-
-    lapic_write(LAPIC_TIMER, LAPIC_TIMER_IRQ | LAPIC_PERIODIC_TIMER);
     lapic_write(LAPIC_TIMER_DIVIDE, 3);
-    lapic_write(LAPIC_TIMER_INITIAL_COUNT, tick_in_10ms);
+    lapic_write(LAPIC_TIMER_INITIAL_COUNT, (-1)); // set lapic timer counter to -1
+
+    hpet_sleep(10);                                                    // sleep 10 ms
+    lapic_write(LAPIC_TIMER, LAPIC_INT_MASKED);                        // stop lapic timer
+    u32 ticks_per_10ms = (-1) - lapic_read(LAPIC_TIMER_CURRENT_COUNT); // save ticks/10 ms
+
+    lapic_write(LAPIC_TIMER, LAPIC_TIMER_IRQ | LAPIC_PERIODIC_TIMER); // start lapic timer
+    lapic_write(LAPIC_TIMER_DIVIDE, 3);                               // use divider 16
+    lapic_write(LAPIC_TIMER_INITIAL_COUNT, ticks_per_10ms);
 }
 
 void init_apic(acpi_t acpi)
