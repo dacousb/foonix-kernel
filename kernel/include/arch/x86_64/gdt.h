@@ -36,10 +36,10 @@ typedef struct
     u32 reserved_low;
     u64 rsp[3];
 
-    u32 reserved_mid[2];
+    u64 reserved_mid;
     u64 ist[7];
 
-    u32 reserved[2];
+    u64 reserved;
     u16 reserved_high;
     u16 io_map_base;
 } __attribute__((packed)) tss_t;
