@@ -11,8 +11,7 @@ static inline vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
 {
     if (!(table[index] & VMM_PRESENT))
     {
-        addr_range_t range = pmm_alloc(PM_SIZE); // must be physical
-        memset((void *)phys_to_io(range.base), 0, PM_SIZE);
+        addr_range_t range = pmm_alloc_zeroed(PM_SIZE); // must be physical
 
         table[index] = range.base;
         table[index] |= flags;
@@ -38,10 +37,8 @@ static inline void vmm_map_page(vmm_entry_t *pm4, u64 virtual_addr, u64 physical
 
 void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap_response *memmap)
 {
-    addr_range_t range = heap_alloc(PM_SIZE);
+    addr_range_t range = heap_alloc_zeroed(PM_SIZE);
     kernel_pm = (vmm_entry_t *)range.base;
-
-    memset(kernel_pm, 0, PM_SIZE);
 
     for (u64 i = 0; i < 0x10000000; i += PAGE_SIZE)
         vmm_map_page(kernel_pm, kaddr->virtual_base + i, kaddr->physical_base + i, VMM_PRESENT | VMM_WRITABLE);

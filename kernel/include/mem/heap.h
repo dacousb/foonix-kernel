@@ -4,6 +4,7 @@
 #include <mem/pmm.h>
 
 addr_range_t heap_alloc(u64 size);
+addr_range_t heap_alloc_zeroed(u64 size);
 void heap_free(addr_range_t range);
 
 #endif

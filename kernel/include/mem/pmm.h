@@ -24,6 +24,7 @@ typedef struct
 
 void init_pmm(struct limine_memmap_response *memmap);
 addr_range_t pmm_alloc(u64 size);
+addr_range_t pmm_alloc_zeroed(u64 size);
 void pmm_free(addr_range_t range);
 
 #endif

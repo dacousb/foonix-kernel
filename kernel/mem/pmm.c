@@ -1,6 +1,6 @@
 #include <mem/mem.h>
-#include <mem/pmm.h>
 #include <mem/mmap.h>
+#include <mem/pmm.h>
 #include <mutex.h>
 #include <panic.h>
 #include <printf.h>
@@ -72,6 +72,14 @@ addr_range_t pmm_alloc(u64 size)
     set_used_range(range.base, range.size / PAGE_SIZE);
 
     unlock(&pmm_mutex);
+    return range;
+}
+
+addr_range_t pmm_alloc_zeroed(u64 size)
+{
+    addr_range_t range = pmm_alloc(size);
+    memset((void *)phys_to_io(range.base), 0, size);
+
     return range;
 }
 
