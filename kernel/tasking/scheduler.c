@@ -1,5 +1,6 @@
 #include <arch/x86_64/asm.h>
 #include <mem/heap.h>
+#include <mem/mmap.h>
 #include <mutex.h>
 #include <printf.h>
 #include <tasking/scheduler.h>
@@ -23,6 +24,9 @@ void schedule(regs_t *regs)
         scheduler.current_task = scheduler.current_task->next;
 
     *regs = scheduler.current_task->frame;
+
+    if (__read_cr3__() != io_to_phys((u64)scheduler.current_task->pm))
+        __write_cr3__(io_to_phys((u64)scheduler.current_task->pm));
 
     unlock(&scheduler_mutex);
 }

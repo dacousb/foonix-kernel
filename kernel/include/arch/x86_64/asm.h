@@ -74,11 +74,19 @@ static inline void __invlpg__(u64 virtual_addr)
                      : "r"(virtual_addr));
 }
 
-static inline void __cr3__(u64 value)
+static inline void __write_cr3__(u64 value)
 {
     __asm__ volatile("mov %0, %%cr3"
                      :
                      : "a"(value));
+}
+
+static inline u64 __read_cr3__()
+{
+    u64 cr3;
+    __asm__ volatile("mov %%cr3, %0"
+                     : "=r"(cr3));
+    return cr3;
 }
 
 #endif

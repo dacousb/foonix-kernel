@@ -76,7 +76,7 @@ void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap
     }
     printf(".\n");
 
-    __cr3__(io_to_phys((u64)kernel_pm));
+    __write_cr3__(io_to_phys((u64)kernel_pm));
 
     printf("[OK] init VMM\n");
 }
