@@ -7,6 +7,11 @@
 
 static vmm_entry_t *kernel_pm = nil;
 
+vmm_entry_t *get_kernel_pm()
+{
+    return kernel_pm;
+}
+
 static inline vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
 {
     if (!(table[index] & VMM_PRESENT))

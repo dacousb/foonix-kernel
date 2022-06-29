@@ -11,7 +11,20 @@
 #include <mem/vmm.h>
 #include <panic.h>
 #include <printf.h>
+#include <tasking/scheduler.h>
 #include <types.h>
+
+void kernel_hello()
+{
+    printf("     Hello\n");
+    __hlt_for__();
+}
+
+void kernel_world()
+{
+    printf("     world!\n");
+    __hlt_for__();
+}
 
 void _start(void)
 {
@@ -43,6 +56,13 @@ void _start(void)
 
     init_pmm(memmap_request.response);
     init_vmm(kaddr_request.response, memmap_request.response);
+
+    i32 task = new_kernel_task((u64)kernel_hello);
+    i32 task_ = new_kernel_task((u64)kernel_world);
+    set_task_status(task, TASK_ACTIVE);
+    set_task_status(task_, TASK_ACTIVE);
+
+    init_scheduler();
 
     __hlt_for__();
 }

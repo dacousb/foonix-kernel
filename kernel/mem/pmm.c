@@ -5,10 +5,10 @@
 #include <panic.h>
 #include <printf.h>
 
-mutex_t pmm_mutex = UNLOCKED;
+static mutex_t pmm_mutex = UNLOCKED;
 
-u64 highest_addr = 0; // aligned
-bitmap_t bitmap = {0};
+static u64 highest_addr = 0; // aligned
+static bitmap_t bitmap = {0};
 
 static inline void set_used(u64 addr)
 {

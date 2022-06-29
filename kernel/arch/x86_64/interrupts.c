@@ -2,6 +2,7 @@
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/interrupts.h>
 #include <printf.h>
+#include <tasking/scheduler.h>
 
 static const char *exception_messages[] = {
     "Division By Zero",
@@ -54,6 +55,8 @@ u64 interrupt_handler(regs_t *regs)
 {
     if (regs->frame_registers.int_no < 32)
         exception_handler(regs);
+    else if (regs->frame_registers.int_no == LAPIC_TIMER_IRQ)
+        schedule(regs);
 
     lapic_eoi();
     return (u64)regs;

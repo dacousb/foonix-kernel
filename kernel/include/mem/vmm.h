@@ -14,6 +14,7 @@ enum vmm_flag
     VMM_USER = (1 << 2)
 };
 
+vmm_entry_t *get_kernel_pm();
 void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap_response *memmap);
 
 #endif
