@@ -31,16 +31,12 @@ void _start(void)
     if (framebuffer_request.response == nil ||
         framebuffer_request.response->framebuffer_count < 1)
         __hlt_for__();
-    if (rsdp_request.response == nil ||
-        rsdp_request.response->address == nil)
-        panic("rsdp request failed");
-    if (memmap_request.response == nil ||
-        memmap_request.response->entry_count < 1)
-        panic("memmap request failed");
-    if (kaddr_request.response == nil)
-        panic("kaddr request failed");
-
     init_fb(framebuffer_request.response->framebuffers[0]);
+
+    assert(rsdp_request.response != nil);
+    assert(memmap_request.response != nil);
+    assert(kaddr_request.response != nil);
+
     printf("  __                   _      \n");
     printf(" / _| ___   ___  _ __ (_)_  __\n");
     printf("| |_ / _ \\ / _ \\| '_ \\| \\ \\/ /\n");

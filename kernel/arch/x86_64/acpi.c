@@ -1,6 +1,7 @@
 #include <arch/x86_64/acpi.h>
 #include <mem/mem.h>
 #include <mem/mmap.h>
+#include <panic.h>
 #include <printf.h>
 
 acpi_t init_acpi(u64 rsdp)
@@ -21,10 +22,13 @@ acpi_t init_acpi(u64 rsdp)
         }
         else if (!memcmp(header->signature, "HPET", 4))
         {
-            acpi.hpet = (hpet_t*)header;
+            acpi.hpet = (hpet_t *)header;
             printf("     found HPET\n");
         }
     }
+
+    assert(acpi.madt != nil);
+    assert(acpi.hpet != nil);
 
     printf("[OK] init ACPI\n");
     return acpi;

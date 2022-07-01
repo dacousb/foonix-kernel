@@ -44,8 +44,7 @@ addr_range_t pmm_alloc(u64 size)
 {
     lock(&pmm_mutex);
 
-    if (!IS_ALIGNED(size))
-        panic("size not aligned");
+    assert(IS_ALIGNED(size));
 
     addr_range_t range = {0};
     for (u64 page = 0; page < bitmap.size * 8; page++)
@@ -66,9 +65,7 @@ addr_range_t pmm_alloc(u64 size)
             break;
     }
 
-    if (range.size < size)
-        panic("out of memory");
-
+    assert(range.size >= size);
     set_used_range(range.base, range.size / PAGE_SIZE);
 
     unlock(&pmm_mutex);
@@ -87,8 +84,7 @@ void pmm_free(addr_range_t range)
 {
     lock(&pmm_mutex);
 
-    if (!IS_ALIGNED(range.size))
-        panic("size not aligned");
+    assert(IS_ALIGNED(range.size));
     set_unused_range(range.base, range.size / PAGE_SIZE);
 
     unlock(&pmm_mutex);
@@ -96,6 +92,8 @@ void pmm_free(addr_range_t range)
 
 void init_pmm(struct limine_memmap_response *memmap)
 {
+    assert(memmap->entry_count > 0);
+
     for (u64 i = 0; i < memmap->entry_count; i++)
     {
         struct limine_memmap_entry *entry = memmap->entries[i];
@@ -124,9 +122,8 @@ void init_pmm(struct limine_memmap_response *memmap)
             break;
         }
     }
-    if (bitmap.bitmap == nil)
-        panic("bitmap allocation failed");
 
+    assert(bitmap.bitmap != nil);
     memset(bitmap.bitmap, 0xff, bitmap.size); // set all pages to `used`
 
     u64 available_bytes = 0;
