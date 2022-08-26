@@ -57,7 +57,7 @@ endif
 override CFILES := $(shell find ./ -type f -name '*.c')
 override ASMFILES := $(shell find ./ -type f -name '*.asm')
 
-override OBJ := $(CFILES:.c=.o) $(ASMFILES:.asm=.asm.o)
+override OBJ := $(CFILES:.c=.o) $(ASMFILES:.asm=.s.o)
 override HEADER_DEPS := $(CFILES:.c=.d)
 
 # Default target.
@@ -69,10 +69,10 @@ limine.h:
 
 # Link rules for the final kernel executable.
 $(KERNEL): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) $(INTERNALLDFLAGS) -o $@
+	$(LD) $(LDFLAGS) $(INTERNALLDFLAGS) $^ -o $@
 
 # Compilation rules for *.asm files.
-%.asm.o: %.asm
+%.s.o: %.asm
 	$(AS) $(INTERNALASFLAGS) $< -o $@
 
 # Compilation rules for *.c files.
