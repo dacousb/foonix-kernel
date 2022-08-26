@@ -1,8 +1,8 @@
 #include <arch/x86_64/acpi.h>
+#include <lib/panic.h>
+#include <lib/printf.h>
 #include <mem/mem.h>
 #include <mem/mmap.h>
-#include <panic.h>
-#include <printf.h>
 
 acpi_t init_acpi(u64 rsdp)
 {

@@ -1,9 +1,14 @@
 #include <arch/x86_64/gdt.h>
-#include <printf.h>
+#include <lib/printf.h>
 
 static gdtr_t gdtr = {0};
 static gdt_t gdt = {0};
 static tss_t tss = {0};
+
+tss_t *get_tss()
+{
+    return &tss;
+}
 
 tss_entry_t new_tss_entry(u64 tss_addr)
 {

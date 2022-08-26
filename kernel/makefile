@@ -10,7 +10,7 @@ override AS := nasm
 override KERNEL := kernel.elf
 
 # User controllable CFLAGS.
-CFLAGS ?= -O2 -g -Wall -Wextra -Wpedantic -pipe -Iinclude
+CFLAGS ?= -O2 -g -Wall -Wextra -Wpedantic -pipe
 
 # User controllable linker flags. We set none by default.
 LDFLAGS ?=

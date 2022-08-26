@@ -2,7 +2,7 @@
 #define __APIC_H__
 
 #include <arch/x86_64/acpi.h>
-#include <types.h>
+#include <lib/types.h>
 
 #define LAPIC_TIMER_IRQ 32
 

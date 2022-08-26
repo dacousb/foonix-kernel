@@ -1,6 +1,6 @@
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/idt.h>
-#include <printf.h>
+#include <lib/printf.h>
 
 extern u64 interrupts[256]; // interrupts.asm
 

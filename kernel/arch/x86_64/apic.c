@@ -2,8 +2,8 @@
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/hpet.h>
 #include <arch/x86_64/pic.h>
+#include <lib/printf.h>
 #include <mem/mmap.h>
-#include <printf.h>
 
 static u64 lapic_base = 0;
 

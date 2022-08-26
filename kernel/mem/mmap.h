@@ -1,7 +1,7 @@
 #ifndef __MMAP_H__
 #define __MMAP_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 #define MEM_IO_BASE (u64)0xffff800000000000
 

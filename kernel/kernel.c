@@ -6,13 +6,13 @@
 #include <arch/x86_64/gdt.h>
 #include <arch/x86_64/hpet.h>
 #include <arch/x86_64/idt.h>
-#include <fb.h>
+#include <lib/fb.h>
+#include <lib/panic.h>
+#include <lib/printf.h>
+#include <lib/types.h>
 #include <mem/pmm.h>
 #include <mem/vmm.h>
-#include <panic.h>
-#include <printf.h>
 #include <tasking/scheduler.h>
-#include <types.h>
 
 void kernel_hello()
 {

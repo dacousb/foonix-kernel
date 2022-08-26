@@ -1,15 +1,26 @@
 #include <arch/x86_64/asm.h>
+#include <lib/printf.h>
 #include <mem/heap.h>
 #include <mem/mem.h>
 #include <mem/mmap.h>
 #include <mem/vmm.h>
-#include <printf.h>
 
 static vmm_entry_t *kernel_pm = nil;
 
 vmm_entry_t *get_kernel_pm()
 {
     return kernel_pm;
+}
+
+vmm_entry_t *new_pm()
+{
+    addr_range_t range = heap_alloc_zeroed(PM_SIZE);
+    vmm_entry_t *pm = (vmm_entry_t *)range.base;
+
+    for (u64 i = 256; i < 512; i++)
+        pm[i] = kernel_pm[i];
+
+    return pm;
 }
 
 static inline vmm_entry_t *vmm_get_pm(vmm_entry_t *table, u64 index, u64 flags)
@@ -40,20 +51,22 @@ static inline void vmm_map_page(vmm_entry_t *pm4, u64 virtual_addr, u64 physical
     __invlpg__(virtual_addr);
 }
 
+void vmm_map_range(vmm_entry_t *pm4, u64 virtual_addr, u64 physical_addr, u64 size, u64 flags)
+{
+    for (u64 i = 0; i < size; i += PAGE_SIZE)
+        vmm_map_page(pm4, virtual_addr + i, physical_addr + i, flags);
+}
+
 void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap_response *memmap)
 {
     addr_range_t range = heap_alloc_zeroed(PM_SIZE);
     kernel_pm = (vmm_entry_t *)range.base;
 
-    for (u64 i = 0; i < 0x10000000; i += PAGE_SIZE)
-        vmm_map_page(kernel_pm, kaddr->virtual_base + i, kaddr->physical_base + i, VMM_PRESENT | VMM_WRITABLE);
-    printf("     .");
+    vmm_map_range(kernel_pm, kaddr->virtual_base, kaddr->physical_base, 0x10000000, VMM_PRESENT | VMM_WRITABLE);
+    printf(".");
 
-    for (u64 i = 0x1000; i < 0x100000000; i += PAGE_SIZE)
-    {
-        vmm_map_page(kernel_pm, i, i, VMM_PRESENT | VMM_WRITABLE);
-        vmm_map_page(kernel_pm, phys_to_io(i), i, VMM_PRESENT | VMM_WRITABLE);
-    }
+    vmm_map_range(kernel_pm, 0x1000, 0x1000, 0x100000000 - 0x1000, VMM_PRESENT | VMM_WRITABLE);
+    vmm_map_range(kernel_pm, phys_to_io(0x1000), 0x1000, 0x100000000 - 0x1000, VMM_PRESENT | VMM_WRITABLE);
     printf(".");
 
     for (u64 i = 0; i < memmap->entry_count; i++)
@@ -65,14 +78,11 @@ void init_vmm(struct limine_kernel_address_response *kaddr, struct limine_memmap
 
         if (top <= 0x100000000)
             continue;
+        if (base < 0x100000000)
+            base = 0x100000000;
 
-        for (u64 j = base; j < top; j += PAGE_SIZE)
-        {
-            if (j < 0x100000000)
-                continue;
-            vmm_map_page(kernel_pm, j, j, VMM_PRESENT | VMM_WRITABLE);
-            vmm_map_page(kernel_pm, phys_to_io(j), j, VMM_PRESENT | VMM_WRITABLE);
-        }
+        vmm_map_range(kernel_pm, base, base, top - base, VMM_PRESENT | VMM_WRITABLE);
+        vmm_map_range(kernel_pm, phys_to_io(base), base, top - base, VMM_PRESENT | VMM_WRITABLE);
     }
     printf(".\n");
 

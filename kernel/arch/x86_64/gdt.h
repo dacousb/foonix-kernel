@@ -1,7 +1,7 @@
 #ifndef __GDT_H__
 #define __GDT_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 typedef struct
 {
@@ -71,6 +71,7 @@ typedef struct
     tss_entry_t tss_entry;
 } __attribute__((packed)) gdt_t;
 
+tss_t *get_tss();
 void init_gdt();
 extern void reload_gdt(gdtr_t *gdtr); // gdt.asm
 extern void reload_tss();             // gdt.asm

@@ -2,7 +2,7 @@
 #define __PANIC_H__
 
 #include <arch/x86_64/asm.h>
-#include <printf.h>
+#include <lib/printf.h>
 
 #define panic(reason)                                                 \
     {                                                                 \

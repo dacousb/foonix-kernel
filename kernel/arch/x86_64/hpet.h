@@ -2,7 +2,7 @@
 #define __HPET_H__
 
 #include <arch/x86_64/acpi.h>
-#include <types.h>
+#include <lib/types.h>
 
 enum hpet_reg
 {

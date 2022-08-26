@@ -1,7 +1,7 @@
-#include <fb.h>
-#include <font.h>
+#include <lib/fb.h>
+#include <lib/font.h>
+#include <lib/types.h>
 #include <mem/mem.h>
-#include <types.h>
 
 static u32 *fb;
 

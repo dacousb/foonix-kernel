@@ -1,7 +1,7 @@
 #ifndef __FONT_H__
 #define __FONT_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 #define FONT_HEIGHT 8
 #define FONT_WIDTH 8

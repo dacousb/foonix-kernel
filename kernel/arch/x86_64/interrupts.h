@@ -1,7 +1,7 @@
 #ifndef __INTERRUPTS_H__
 #define __INTERRUPTS_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 typedef struct
 {

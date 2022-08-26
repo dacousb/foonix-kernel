@@ -1,7 +1,7 @@
 #include <stdarg.h>
 
-#include <fb.h>
-#include <types.h>
+#include <lib/fb.h>
+#include <lib/types.h>
 
 static void itoa(char base, u64 i)
 {

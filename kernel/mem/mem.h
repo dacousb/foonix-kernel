@@ -1,7 +1,7 @@
 #ifndef __MEM_H__
 #define __MEM_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 static inline void *memset(void *ptr, int v, u64 n)
 {

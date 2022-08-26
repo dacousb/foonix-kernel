@@ -1,7 +1,7 @@
 #ifndef __ASM_H__
 #define __ASM_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 static inline u8 in8(u16 port)
 {

@@ -1,8 +1,9 @@
 #include <arch/x86_64/asm.h>
+#include <arch/x86_64/gdt.h>
+#include <lib/mutex.h>
+#include <lib/printf.h>
 #include <mem/heap.h>
 #include <mem/mmap.h>
-#include <mutex.h>
-#include <printf.h>
 #include <tasking/scheduler.h>
 
 static mutex_t scheduler_mutex = UNLOCKED;
@@ -24,6 +25,9 @@ void schedule(regs_t *regs)
         scheduler.current_task = scheduler.current_task->next;
 
     *regs = scheduler.current_task->frame;
+
+    get_tss()->rsp[0] = scheduler.current_task->kernel_stack_range.base +
+                        scheduler.current_task->kernel_stack_range.size;
 
     if (__read_cr3__() != io_to_phys((u64)scheduler.current_task->pm))
         __write_cr3__(io_to_phys((u64)scheduler.current_task->pm));

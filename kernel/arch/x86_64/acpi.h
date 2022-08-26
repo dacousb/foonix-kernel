@@ -1,7 +1,7 @@
 #ifndef __ACPI_H__
 #define __ACPI_H__
 
-#include <types.h>
+#include <lib/types.h>
 
 typedef struct
 {

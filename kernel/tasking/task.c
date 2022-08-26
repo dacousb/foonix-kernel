@@ -1,4 +1,5 @@
 #include <mem/heap.h>
+#include <mem/mmap.h>
 #include <tasking/scheduler.h>
 #include <tasking/task.h>
 
@@ -8,6 +9,7 @@ i32 new_kernel_task(u64 entry)
 {
     addr_range_t task_range = heap_alloc_zeroed(sizeof(task_t));
     addr_range_t stack_range = heap_alloc_zeroed(STACK_SIZE);
+    addr_range_t kernel_stack_range = heap_alloc_zeroed(STACK_SIZE);
 
     task_t *task = (task_t *)task_range.base;
 
@@ -23,6 +25,40 @@ i32 new_kernel_task(u64 entry)
 
     task->task_range = task_range;
     task->stack_range = stack_range;
+    task->kernel_stack_range = kernel_stack_range;
+
+    task->next = nil;
+
+    append_task(task);
+    return task->pid;
+}
+
+i32 new_user_task(elf_header_t *elf_header)
+{
+    addr_range_t task_range = heap_alloc_zeroed(sizeof(task_t));
+    addr_range_t stack_range = heap_alloc_zeroed(STACK_SIZE);
+    addr_range_t kernel_stack_range = heap_alloc_zeroed(STACK_SIZE);
+
+    task_t *task = (task_t *)task_range.base;
+
+    task->pid = pid_count++;
+    task->status = TASK_IDLE;
+
+    task->frame.frame_registers.rip = elf_header->entry;
+    task->frame.frame_registers.rsp = io_to_phys(stack_range.base) + STACK_SIZE;
+    task->frame.frame_registers.cs = 3 * 8 | 3; // user code
+    task->frame.frame_registers.ss = 4 * 8 | 3; // user data
+    task->frame.frame_registers.rflags = 0x202; // enable interrupts
+    task->pm = new_pm();
+
+    vmm_map_range(task->pm, io_to_phys(stack_range.base), io_to_phys(stack_range.base),
+                  STACK_SIZE, VMM_PRESENT | VMM_WRITABLE | VMM_USER);
+
+    load_elf(task->pm, elf_header);
+
+    task->task_range = task_range;
+    task->stack_range = stack_range;
+    task->kernel_stack_range = kernel_stack_range;
 
     task->next = nil;
 

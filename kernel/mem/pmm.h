@@ -1,8 +1,8 @@
 #ifndef __PMM_H__
 #define __PMM_H__
 
+#include <lib/types.h>
 #include <limine.h>
-#include <types.h>
 
 #define PAGE_SIZE 4096
 

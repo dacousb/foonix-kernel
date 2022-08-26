@@ -1,6 +1,6 @@
 #include <arch/x86_64/hpet.h>
+#include <lib/printf.h>
 #include <mem/mmap.h>
-#include <printf.h>
 
 u64 hpet_base = 0, hpet_freq = 0;
 
