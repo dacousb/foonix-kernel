@@ -1,9 +1,10 @@
+#include "pmm.h"
+
 #include <lib/mutex.h>
 #include <lib/panic.h>
 #include <lib/printf.h>
 #include <mem/mem.h>
 #include <mem/mmap.h>
-#include <mem/pmm.h>
 
 static mutex_t pmm_mutex = UNLOCKED;
 

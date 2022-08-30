@@ -1,10 +1,11 @@
+#include "scheduler.h"
+
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/gdt.h>
 #include <lib/mutex.h>
 #include <lib/printf.h>
 #include <mem/heap.h>
 #include <mem/mmap.h>
-#include <tasking/scheduler.h>
 
 static mutex_t scheduler_mutex = UNLOCKED;
 static scheduler_t scheduler = {0};

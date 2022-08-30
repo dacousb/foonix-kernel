@@ -1,6 +1,7 @@
+#include "syscall.h"
+
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/interrupts.h>
-#include <arch/x86_64/syscall.h>
 #include <lib/printf.h>
 #include <lib/syscalls.h>
 

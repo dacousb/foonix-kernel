@@ -1,3 +1,5 @@
+#include "printf.h"
+
 #include <stdarg.h>
 
 #include <lib/fb.h>

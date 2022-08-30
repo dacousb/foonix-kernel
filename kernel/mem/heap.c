@@ -1,4 +1,4 @@
-#include <mem/heap.h>
+#include "heap.h"
 #include <mem/mmap.h>
 
 addr_range_t heap_alloc(u64 size)

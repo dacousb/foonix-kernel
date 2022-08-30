@@ -1,9 +1,10 @@
+#include "vmm.h"
+
 #include <arch/x86_64/asm.h>
 #include <lib/printf.h>
 #include <mem/heap.h>
 #include <mem/mem.h>
 #include <mem/mmap.h>
-#include <mem/vmm.h>
 
 static vmm_entry_t *kernel_pm = nil;
 

@@ -1,6 +1,7 @@
+#include "interrupts.h"
+
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/asm.h>
-#include <arch/x86_64/interrupts.h>
 #include <lib/printf.h>
 #include <tasking/scheduler.h>
 

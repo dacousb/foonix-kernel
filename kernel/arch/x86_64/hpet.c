@@ -1,4 +1,5 @@
-#include <arch/x86_64/hpet.h>
+#include "hpet.h"
+
 #include <lib/printf.h>
 #include <mem/mmap.h>
 

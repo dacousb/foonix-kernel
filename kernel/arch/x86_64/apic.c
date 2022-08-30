@@ -1,4 +1,5 @@
-#include <arch/x86_64/apic.h>
+#include "apic.h"
+
 #include <arch/x86_64/asm.h>
 #include <arch/x86_64/hpet.h>
 #include <arch/x86_64/pic.h>

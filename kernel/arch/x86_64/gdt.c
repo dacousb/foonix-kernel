@@ -1,4 +1,4 @@
-#include <arch/x86_64/gdt.h>
+#include "gdt.h"
 #include <lib/printf.h>
 
 static gdtr_t gdtr = {0};

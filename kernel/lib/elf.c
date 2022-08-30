@@ -1,4 +1,5 @@
-#include <lib/elf.h>
+#include "elf.h"
+
 #include <lib/panic.h>
 #include <lib/printf.h>
 #include <mem/heap.h>
