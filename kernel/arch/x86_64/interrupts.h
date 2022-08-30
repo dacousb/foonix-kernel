@@ -15,7 +15,7 @@ typedef struct
         u64 r10;
         u64 r9;
         u64 r8;
-    } control_registers;
+    } __attribute__((packed)) control_registers;
 
     struct
     {
@@ -26,7 +26,7 @@ typedef struct
         u64 rcx;
         u64 rbx;
         u64 rax;
-    } general_registers;
+    } __attribute__((packed)) general_registers;
 
     struct
     {
@@ -38,7 +38,7 @@ typedef struct
         u64 rflags;
         u64 rsp;
         u64 ss;
-    } frame_registers;
+    } __attribute__((packed)) frame_registers;
 } __attribute__((packed)) regs_t;
 
 #endif
