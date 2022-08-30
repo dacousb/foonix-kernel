@@ -26,8 +26,8 @@ void schedule(regs_t *regs)
 
     *regs = scheduler.current_task->frame;
 
-    get_tss()->rsp[0] = scheduler.current_task->kernel_stack_range.base +
-                        scheduler.current_task->kernel_stack_range.size;
+    if (scheduler.current_task->gs.syscall_kernel_stack != 0)
+        __wrmsr__(MSR_KERN_GS, (u64)&scheduler.current_task->gs);
 
     if (__read_cr3__() != io_to_phys((u64)scheduler.current_task->pm))
         __write_cr3__(io_to_phys((u64)scheduler.current_task->pm));
@@ -64,6 +64,8 @@ void remove_task(i32 pid)
         scheduler.tasks = task->next;
         heap_free(task->task_range);
         heap_free(task->stack_range);
+        if (task->syscall_stack_range.size != 0)
+            heap_free(task->syscall_stack_range);
     }
     else
     {
@@ -74,6 +76,8 @@ void remove_task(i32 pid)
                 prev->next = task->next;
                 heap_free(task->task_range);
                 heap_free(task->stack_range);
+                if (task->syscall_stack_range.size != 0)
+                    heap_free(task->syscall_stack_range);
                 break;
             }
         }
@@ -101,6 +105,9 @@ void append_task(task_t *task)
 
 void init_scheduler()
 {
+    addr_range_t int_stack_range = heap_alloc_zeroed(STACK_SIZE);
+    get_tss()->rsp[0] = int_stack_range.base + int_stack_range.size;
+
     scheduler.init = 1;
     printf("[OK] init scheduler\n");
 }

@@ -6,6 +6,7 @@
 #include <arch/x86_64/gdt.h>
 #include <arch/x86_64/hpet.h>
 #include <arch/x86_64/idt.h>
+#include <arch/x86_64/syscall.h>
 #include <lib/fb.h>
 #include <lib/panic.h>
 #include <lib/printf.h>
@@ -58,6 +59,7 @@ void _start(void)
     set_task_status(task, TASK_ACTIVE);
     set_task_status(task_, TASK_ACTIVE);
 
+    init_syscall();
     init_scheduler();
 
     __hlt_for__();

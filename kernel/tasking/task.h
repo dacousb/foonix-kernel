@@ -26,7 +26,13 @@ typedef struct task
 
     addr_range_t task_range;
     addr_range_t stack_range;
-    addr_range_t kernel_stack_range;
+    addr_range_t syscall_stack_range;
+
+    struct
+    {
+        u64 syscall_kernel_stack;
+        u64 syscall_user_stack;
+    } __attribute__((packed)) gs;
 
     task_t *next;
 } task_t;

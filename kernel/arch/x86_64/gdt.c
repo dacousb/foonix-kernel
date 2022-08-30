@@ -54,17 +54,6 @@ void init_gdt()
         .A = 0,
         .W = 1,
         .DC = 0,
-        .E = 1,
-        .S = 1,
-        .DPL = 3,
-        .P = 1,
-
-        .L = 1,
-    }; // user code
-    gdt.entries[4] = (gdt_entry_t){
-        .A = 0,
-        .W = 1,
-        .DC = 0,
         .E = 0,
         .S = 1,
         .DPL = 3,
@@ -72,6 +61,17 @@ void init_gdt()
 
         .L = 0,
     }; // user data
+    gdt.entries[4] = (gdt_entry_t){
+        .A = 0,
+        .W = 1,
+        .DC = 0,
+        .E = 1,
+        .S = 1,
+        .DPL = 3,
+        .P = 1,
+
+        .L = 1,
+    }; // user code
     gdt.tss_entry = new_tss_entry((u64)&tss);
 
     gdtr.limit = sizeof(gdt) - 1;

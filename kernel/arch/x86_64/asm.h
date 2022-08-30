@@ -89,4 +89,28 @@ static inline u64 __read_cr3__()
     return cr3;
 }
 
+static inline void __wrmsr__(u32 msr, u64 value)
+{
+#define MSR_EFER 0xc0000080
+#define MSR_STAR 0xc0000081
+#define MSR_LSTAR 0xc0000082
+#define MSR_GS 0xc0000101
+#define MSR_KERN_GS 0xc0000102
+
+    u32 low = value;
+    u32 high = value >> 32;
+    __asm__ volatile("wrmsr"
+                     :
+                     : "c"(msr), "a"(low), "d"(high));
+}
+
+static inline u64 __rdmsr__(u32 msr)
+{
+    u32 low, high;
+    __asm__ volatile("rdmsr"
+                     : "=a"(low), "=d"(high)
+                     : "c"(msr));
+    return ((u64)high << 32) | low;
+}
+
 #endif
